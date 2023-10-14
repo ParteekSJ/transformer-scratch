@@ -1,0 +1,4 @@
+__pycache__
+data_dir
+train_log/[0-9]*/
+test.py
