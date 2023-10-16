@@ -241,8 +241,6 @@ def train(cfg):
                 global_step=epoch,
             )
 
-        breakpoint()
-
         if epoch % cfg.GLOBAL.SAVE_EPOCH_STEP == 0 and rank in [-1, 0]:
             checkpoint = {
                 "epoch": epoch,

@@ -1,3 +1,5 @@
+# used to evaluate models based on their checkpoints.
+
 import argparse
 from utils.config_utils import yaml_parser
 from logger.logger import get_logger
@@ -6,7 +8,8 @@ from loss.build_loss import get_loss
 import os
 import torch
 from data.decoding_strategies import greedy_search_decode, beam_search_decode
-from data.dataset import causal_mask
+from data.dataset import causal_mask, get_ds
+from torch.utils.data import DataLoader
 
 
 def get_args():
@@ -76,7 +79,26 @@ if __name__ == "__main__":
     cuda = cfg.GLOBAL.DEVICE != "cpu" and torch.cuda.is_available()
     device = torch.device("cuda:0" if cuda else "cpu")
 
-    net = get_model(cfg)
+    train_ds, val_ds, tokenizer_src, tokenizer_tgt = get_ds(cfg)
+    val_loader = DataLoader(
+        val_ds,
+        batch_size=cfg.TRAIN.VAL_BATCHSIZE_PER_CARD,
+        shuffle=False,
+        num_workers=cfg.TRAIN.NUM_WORKERS,
+        drop_last=cfg.TRAIN.DROP_LAST,
+    )
+
+    net = get_model(
+        config=cfg,
+        vocab_src_len=tokenizer_src.get_vocab_size(),
+        vocab_tgt_len=tokenizer_tgt.get_vocab_size(),
+    )
     checkpoint = torch.load(args.model_path)
     net.load_state_dict(checkpoint["state_dict_backbone"])
     net.to(device)
+
+    cross_entropy_loss = evaluate(
+        net, val_loader, tokenizer_src, tokenizer_tgt, cfg, device
+    )
+    
+    print(f'VALIDATION MODEL LOSS -> {cross_entropy_loss}')
