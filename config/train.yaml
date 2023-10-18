@@ -1,34 +1,33 @@
 GLOBAL:
   USE_GPU: true
   RESUME: false
-  RESUME_PATH: "${BASE_DIR}/train_log/2022-0926_1009/checkpoints/best.pth"
+  RESUME_PATH: "${BASE_DIR}/train_log/2022-0926_1009/checkpoints/best.pth" # model checkpoint
   DEVICE: 'cpu' # 'cpu' or '0' or '0,1,2,3' ...
-  EPOCH_NUM: 2
-  SAVE_RESULT_DIR: "${BASE_DIR}/train_log"
-  SAVE_EPOCH_STEP: 1
-  VAL_EPOCH_STEP: 1
-  LOG_EPOCH_STEP: 1
-  PRETRAINED_MODEL: "${BASE_DIR}/pretrained_model/resnet34.pth"
+  EPOCH_NUM: 2 # how many epochs to train the model for
+  SAVE_RESULT_DIR: "${BASE_DIR}/train_log" # where to save the model
+  SAVE_EPOCH_STEP: 1 # how frequently save a model
+  VAL_EPOCH_STEP: 1 # how frequently perform validation
+  LOG_EPOCH_STEP: 1 # how frequently log the model progress, 1 - every step
   DISTRIBUTED: true
-  EARLY_STOP_PATIENCE: 5
+  EARLY_STOP_PATIENCE: 5 # how long to wait before observing no gradual changes
   TRAIN_DIR: "${BASE_DIR}/data_dir/train"
   VAL_DIR: "${BASE_DIR}/data_dir/val"
   TEST_DIR: "${BASE_DIR}/data_dir/test"
   USE_AMP: false
   LANG_SRC: "en"
   LANG_TGT: "it"
-  SEQ_LEN: 350 # GLOBAL MAXIMUM LENGTH for all sequences.
+  SEQ_LEN: 350
+  SENTENCE: "this is a test sentence"
+  DECODING_STRATEGY: 'beam'
   
 
 TRAIN:
-  IMG_SIZE: 224
   TRAIN_BATCHSIZE_PER_CARD: 4
   VAL_BATCHSIZE_PER_CARD: 1
   DROP_LAST: true
   NUM_WORKERS: 4
 
 DATASET:
-  SEQ_LEN: 350
   THRESHOLD: 4
 
 MODEL:

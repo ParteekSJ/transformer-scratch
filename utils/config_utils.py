@@ -11,6 +11,13 @@ from shutil import copyfile
 import os
 
 
+def get_envs():
+    local_rank = int(os.getenv("LOCAL_RANK", -1))
+    rank = int(os.getenv("RANK", -1))
+    world_size = int(os.getenv("WORLD_SIZE", 1))
+    return local_rank, rank, world_size
+
+
 def setup_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
@@ -58,30 +65,32 @@ def init_setting(cfg):
     log_dir = experiment_dir.joinpath("log/")
     log_dir.mkdir(exist_ok=True)  # directory for saving the settings
 
-    # # copy various project files into the "setting" directory
-    # copyfile(os.path.join(BASE_DIR, "data/dataset.py"), str(setting_dir) + "/dataset.py")
+    # copy various project files into the "setting" directory
+    copyfile(
+        os.path.join(BASE_DIR, "data/dataset.py"), str(setting_dir) + "/dataset.py"
+    )
 
-    # if cfg.GLOBAL.RESUME:
-    #     copyfile(
-    #         os.path.join(BASE_DIR, "config/retrain.yaml"),
-    #         str(setting_dir) + "/retrain.yaml",
-    #     )  # retraining
-    # else:
-    #     copyfile(
-    #         os.path.join(BASE_DIR, "config/train.yaml"),
-    #         str(setting_dir) + "/train.yaml",
-    #     )  # fresh training
+    if cfg.GLOBAL.RESUME:
+        copyfile(
+            os.path.join(BASE_DIR, "config/retrain.yaml"),
+            str(setting_dir) + "/retrain.yaml",
+        )  # retraining
+    else:
+        copyfile(
+            os.path.join(BASE_DIR, "config/train.yaml"),
+            str(setting_dir) + "/train.yaml",
+        )  # fresh training
 
-    # copyfile(
-    #     os.path.join(BASE_DIR, "loss/build_loss.py"),
-    #     str(setting_dir) + "/build_loss.py",
-    # )
-    # copyfile(
-    #     os.path.join(BASE_DIR, "model/build_model.py"),
-    #     str(setting_dir) + "/build_model.py",
-    # )
-    # copyfile(os.path.join(BASE_DIR, "train.py"), str(setting_dir) + "/train.py")
-    # copyfile(os.path.join(BASE_DIR, "val.py"), str(setting_dir) + "/val.py")
+    copyfile(
+        os.path.join(BASE_DIR, "loss/build_loss.py"),
+        str(setting_dir) + "/build_loss.py",
+    )
+    copyfile(
+        os.path.join(BASE_DIR, "model/build_model.py"),
+        str(setting_dir) + "/build_model.py",
+    )
+    copyfile(os.path.join(BASE_DIR, "train.py"), str(setting_dir) + "/train.py")
+    copyfile(os.path.join(BASE_DIR, "val.py"), str(setting_dir) + "/val.py")
 
     # returns several directory paths
     return experiment_dir, checkpoints_dir, tensorboard_dir, log_dir

@@ -2,7 +2,7 @@ import argparse
 import os
 import torch
 from torch.utils.data import DataLoader, distributed
-from utils.config_utils import yaml_parser, setup_seed, init_setting
+from utils.config_utils import yaml_parser, setup_seed, init_setting, get_envs
 from utils.optimizer_utils import get_parameter_number, build_optimizer, build_scheduler
 from logger.logger import setup_logging, get_logger
 import torch.distributed as dist
@@ -34,13 +34,6 @@ def get_args():
     )
 
     return parser.parse_args()
-
-
-def get_envs():
-    local_rank = int(os.getenv("LOCAL_RANK", -1))
-    rank = int(os.getenv("RANK", -1))
-    world_size = int(os.getenv("WORLD_SIZE", 1))
-    return local_rank, rank, world_size
 
 
 def train(cfg):
