@@ -1,4 +1,4 @@
-# used to evaluate models based on their checkpoints.
+# used to evaluate models (any model) based on their checkpoints.
 
 import argparse
 from utils.config_utils import yaml_parser
@@ -7,8 +7,7 @@ from model.build_model import get_model
 from loss.build_loss import get_loss
 import os
 import torch
-from data.decoding_strategies import greedy_search_decode, beam_search_decode
-from data.dataset import causal_mask, get_ds
+from data.dataset import get_ds
 from torch.utils.data import DataLoader
 
 
@@ -100,5 +99,5 @@ if __name__ == "__main__":
     cross_entropy_loss = evaluate(
         net, val_loader, tokenizer_src, tokenizer_tgt, cfg, device
     )
-    
-    print(f'VALIDATION MODEL LOSS -> {cross_entropy_loss}')
+
+    print(f"VALIDATION MODEL LOSS -> {cross_entropy_loss}")

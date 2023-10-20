@@ -48,7 +48,7 @@ def translate(cfg):
     cuda = cfg.GLOBAL.DEVICE != "cpu" and torch.cuda.is_available()  # bool
     device = torch.device("cuda:0" if cuda else "cpu")
 
-    train_ds, val_ds, tokenizer_src, tokenizer_tgt = get_ds(cfg)
+    _, _, tokenizer_src, tokenizer_tgt = get_ds(cfg)
 
     model = get_model(
         cfg,

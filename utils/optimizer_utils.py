@@ -1,6 +1,5 @@
 import math
-import torch.nn as nn
-from torch.optim import Adam, SGD, lr_scheduler
+from torch.optim import Adam, lr_scheduler
 
 
 def get_parameter_number(model):
