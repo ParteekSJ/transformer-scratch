@@ -1,0 +1,4 @@
+__pycache__
+tokenizer/
+data/opus_books
+*.lock
